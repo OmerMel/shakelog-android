@@ -14,6 +14,11 @@ class ShakeDetector(private val context: Context) : SensorEventListener{
     val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
+    private var setOnShakeListener: (() -> Unit)? = null
+    fun setOnShakeListener(listener: () -> Unit) {
+        setOnShakeListener = listener
+    }
+
     var lastShakeTime = 0L
 
     fun start() {
@@ -45,8 +50,11 @@ class ShakeDetector(private val context: Context) : SensorEventListener{
                     return
 
                 // Shake detected
+                //TODO: Check if amount of time since last shake is more than SHAKE_COUNT_RESET_TIME_MS
                 lastShakeTime = System.currentTimeMillis()
                 Log.d("ShakeLog", "Shake detected with gForce: $gForce")
+
+                setOnShakeListener?.invoke()
             }
         }
     }

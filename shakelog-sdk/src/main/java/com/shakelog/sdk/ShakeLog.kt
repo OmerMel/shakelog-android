@@ -1,9 +1,74 @@
 package com.shakelog.sdk
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.graphics.Bitmap
+import android.os.Bundle
 import android.util.Log
+import com.shakelog.sdk.utils.ScreenshotHelper
+import java.lang.ref.WeakReference
 
-object ShakeLog {
-    fun sayHello() {
-        Log.d("ShakeLogSDK", "Hello from the SDK!")
+object ShakeLog : Application.ActivityLifecycleCallbacks {
+
+    @SuppressLint("StaticFieldLeak")
+    private var shakeDetector: ShakeDetector? = null
+
+    public var pendingScreenshot: Bitmap? = null
+
+    private var currentActivityRef: WeakReference<Activity?> = WeakReference(null)
+
+    fun init(application: Application) {
+        if(shakeDetector != null)
+            return
+
+        Log.d("ShakeLogSDK", "Initializing SDK with Lifecycle Observer...")
+
+        application.registerActivityLifecycleCallbacks(this)
+
+        shakeDetector = ShakeDetector(application.applicationContext)
+
+        shakeDetector?.setOnShakeListener {
+            val currentActivity = currentActivityRef.get()
+            if (currentActivity != null) {
+                Log.d("ShakeLogSDK", "Shake detected, taking screenshot...")
+                ScreenshotHelper.takeScreenshot(currentActivity) { bitmap ->
+                    if (bitmap != null) {
+                        Log.d("ShakeLogSDK", "Screenshot taken successfully.")
+                        pendingScreenshot = bitmap
+
+                        val intent = Intent(currentActivity, ReportActivity::class.java)
+                        intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                        currentActivity.startActivity(intent)
+                    } else {
+                        Log.d("ShakeLogSDK", "Failed to take screenshot.")
+                    }
+                }
+            } else {
+                Log.d("ShakeLogSDK", "No current activity found to take screenshot.")
+            }
+        }
+
+        shakeDetector?.start()
     }
+    // --- ActivityLifecycleCallbacks Implementation ---
+    // These methods help keep track of the current activity
+    override fun onActivityResumed(activity: Activity) {
+        currentActivityRef = WeakReference(activity)
+    }
+
+    override fun onActivityPaused(activity: Activity) {
+        if (currentActivityRef.get() == activity) {
+            currentActivityRef = WeakReference(null)
+        }
+    }
+
+    // Unused lifecycle methods
+    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) { }
+    override fun onActivityStarted(p0: Activity) { }
+    override fun onActivityStopped(p0: Activity) { }
+    override fun onActivityCreated(p0: Activity, p1: Bundle?) { }
+    override fun onActivityDestroyed(p0: Activity) { }
 }

@@ -8,6 +8,8 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import com.shakelog.sdk.data.BreadcrumbManager
+import com.shakelog.sdk.data.BreadcrumbType
 import com.shakelog.sdk.utils.ScreenshotHelper
 import java.lang.ref.WeakReference
 
@@ -53,10 +55,21 @@ object ShakeLog : Application.ActivityLifecycleCallbacks {
 
         shakeDetector?.start()
     }
+
+    /// Add ability for developer to log manual logs
+    fun log(message: String) {
+        BreadcrumbManager.add(BreadcrumbType.USER, message)
+    }
+
     // --- ActivityLifecycleCallbacks Implementation ---
     // These methods help keep track of the current activity
     override fun onActivityResumed(activity: Activity) {
         currentActivityRef = WeakReference(activity)
+
+        BreadcrumbManager.add(
+            type = BreadcrumbType.LIFECYCLE,
+            message = "Screen Viewed: ${activity.javaClass.simpleName}"
+        )
     }
 
     override fun onActivityPaused(activity: Activity) {
@@ -65,10 +78,16 @@ object ShakeLog : Application.ActivityLifecycleCallbacks {
         }
     }
 
+    override fun onActivityStopped(activity: Activity) {
+        BreadcrumbManager.add(
+            type = BreadcrumbType.LIFECYCLE,
+            message = "Screen Background: ${activity.javaClass.simpleName}"
+        )
+    }
+
     // Unused lifecycle methods
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) { }
     override fun onActivityStarted(p0: Activity) { }
-    override fun onActivityStopped(p0: Activity) { }
     override fun onActivityCreated(p0: Activity, p1: Bundle?) { }
     override fun onActivityDestroyed(p0: Activity) { }
 }

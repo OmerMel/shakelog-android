@@ -17,7 +17,14 @@ import com.shakelog.sdk.ui.DrawingView
 import java.io.File
 import java.io.FileOutputStream
 import androidx.core.graphics.createBitmap
+import com.shakelog.sdk.data.BreadcrumbData
+import com.shakelog.sdk.data.BreadcrumbManager
+import com.shakelog.sdk.network.NetworkManager
+import com.shakelog.sdk.network.model.DeviceInfoData
+import com.shakelog.sdk.network.model.ReportRequest
 import com.shakelog.sdk.utils.DeviceCollector
+import java.time.Instant
+import java.util.UUID
 
 class ReportActivity : AppCompatActivity() {
 
@@ -124,25 +131,71 @@ class ReportActivity : AppCompatActivity() {
         try {
             val file = File(cacheDir, "bug_report_${System.currentTimeMillis()}.png")
             val outputStream = FileOutputStream(file)
-
-            val deviceData = DeviceCollector.getDeviceData(this)
-            Log.d("ShakeLog", "Device Info: $deviceData")
-
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
             outputStream.flush()
             outputStream.close()
 
-            Log.d("ShakeLog", "Report Saved! Path: ${file.absolutePath}")
-            Log.d("ShakeLog", "Description: $description")
-
-            Toast.makeText(this, "Report sent successfully", Toast.LENGTH_LONG).show()
-
-            finish()
+            NetworkManager.uploadImage(file) { imageUrl ->
+                if (imageUrl != null) {
+                    Log.d("ShakeLog", "Image uploaded: $imageUrl")
+                    sendJsonReport(imageUrl, description)
+                } else {
+                    Toast.makeText(this, "Upload image failed", Toast.LENGTH_LONG).show()
+                }
+            }
 
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Unable to send the report", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun sendJsonReport(imageUrl: String, description: String) {
+        val request = createRequest(imageUrl, description)
+
+        NetworkManager.sendReport(request) { success ->
+            if (success) {
+                runOnUiThread {
+                    Toast.makeText(this, "Report sent successfully ", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            } else {
+                runOnUiThread {
+                    Toast.makeText(this, "Unable to send the report", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun createRequest(imageUrl: String, description: String): ReportRequest {
+        val deviceMap = DeviceCollector.getDeviceData(this)
+
+        val deviceInfo = DeviceInfoData(
+            manufacturer = deviceMap["manufacturer"] ?: "Unknown",
+            model = deviceMap["model"] ?: "Unknown",
+            osVersion = deviceMap["os_version"] ?: "Unknown",
+            sdkVersion = deviceMap["sdk_version"] ?: "Unknown",
+            batteryLevel = deviceMap["battery_level"] ?: "Unknown",
+            screenSize = deviceMap["screen_resolution"] ?: "Unknown"
+        )
+
+        val logs = BreadcrumbManager.getLogs().map { breadcrumb ->
+            BreadcrumbData(
+                timestamp = breadcrumb.timestamp,
+                type = breadcrumb.type,
+                message = breadcrumb.message,
+                data = breadcrumb.data
+            )
+        }
+
+        return ReportRequest(
+            reportId = UUID.randomUUID().toString(),
+            timestamp = Instant.now().toString(),
+            userDescription = description,
+            device = deviceInfo,
+            screenshotUrl = imageUrl,
+            breadcrumbs = logs
+        )
     }
 
     override fun onDestroy() {

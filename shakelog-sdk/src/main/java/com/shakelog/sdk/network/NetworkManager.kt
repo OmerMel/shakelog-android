@@ -22,7 +22,7 @@ object NetworkManager {
     // server local address
     // if real device: your computer's IP address on the local network
     // if emulator: use "http://10.0.2.2:8080/"
-    private const val BASE_URL = "http://192.168.1.247:8080/"
+    private const val BASE_URL = "http://shakelog-server.onrender.com/"
 
     private val api: ShakeLogApi by lazy {
         val logging = HttpLoggingInterceptor().apply {

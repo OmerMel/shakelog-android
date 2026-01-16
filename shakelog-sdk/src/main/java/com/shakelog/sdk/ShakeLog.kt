@@ -22,11 +22,22 @@ object ShakeLog : Application.ActivityLifecycleCallbacks {
 
     private var currentActivityRef: WeakReference<Activity?> = WeakReference(null)
 
-    fun init(application: Application) {
+    /// API Key set by the developer
+    var apiKey: String = ""
+        private set
+
+    // Reporter user ID
+    var userId: String? = null
+        private set
+
+    val userMetadata = mutableMapOf<String, String>()
+
+    fun init(application: Application, apiKey: String) {
         if(shakeDetector != null)
             return
 
-        Log.d("ShakeLogSDK", "Initializing SDK with Lifecycle Observer...")
+        this.apiKey = apiKey
+        Log.d("ShakeLogSDK", "Initializing SDK with API Key: $apiKey")
 
         application.registerActivityLifecycleCallbacks(this)
 
@@ -56,9 +67,35 @@ object ShakeLog : Application.ActivityLifecycleCallbacks {
         shakeDetector?.start()
     }
 
-    /// Add ability for developer to log manual logs
+    /**
+     *Add ability for developer to log manual logs
+     */
     fun log(message: String) {
         BreadcrumbManager.add(BreadcrumbType.USER, message)
+    }
+
+    /**
+     * Setting a unique identifier for the reporting user
+     */
+    fun setUserIdentifier(id: String) {
+        this.userId = id
+        BreadcrumbManager.add(BreadcrumbType.USER, "User ID set to: $id")
+    }
+
+    /**
+     * Adding custom metadata for the reporting user
+     */
+    fun setMetadata(key: String, value: String) {
+        userMetadata[key] = value
+    }
+
+    /**
+     * Clearing user information upon logout
+     */
+    fun clearUser() {
+        this.userId = null
+        userMetadata.clear()
+        BreadcrumbManager.add(BreadcrumbType.USER, "User logged out / cleared")
     }
 
     // --- ActivityLifecycleCallbacks Implementation ---

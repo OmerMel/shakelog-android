@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
@@ -111,23 +112,62 @@ class ReportActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Report Bug")
 
-        val input = EditText(this)
-        input.hint = "Describe the bug..."
-        builder.setView(input)
+        val container = LinearLayout(this)
+        container.orientation = LinearLayout.VERTICAL
+        container.setPadding(50, 40, 50, 10)
 
-        builder.setPositiveButton("Send") { _, _ ->
-            val description = input.text.toString()
-            saveAndSendReport(finalBitmap, description)
+        val inputName = EditText(this)
+        inputName.hint = "Name"
+        container.addView(inputName)
+
+        val inputEmail = EditText(this)
+        inputEmail.hint = "Email"
+        inputEmail.inputType = android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        container.addView(inputEmail)
+
+        val inputDesc = EditText(this)
+        inputDesc.hint = "Description of the issue"
+        inputDesc.minLines = 3
+        inputDesc.gravity = android.view.Gravity.TOP or android.view.Gravity.START
+        container.addView(inputDesc)
+
+        builder.setView(container)
+
+        builder.setPositiveButton("Send", null)
+
+        val dialog = builder.create()
+        dialog.show()
+
+        // override the positive button to prevent auto-dismiss
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val name = inputName.text.toString().trim()
+            val email = inputEmail.text.toString().trim()
+            val description = inputDesc.text.toString().trim()
+
+            var isValid = true
+
+            if (name.isEmpty()) {
+                inputName.error = "Please enter your name"
+                isValid = false
+            }
+
+            if (email.isEmpty()) {
+                inputEmail.error = "Please enter your email"
+                isValid = false
+            }
+
+            if (isValid) {
+                dialog.dismiss()
+                saveAndSendReport(finalBitmap, description, name, email)
+            }
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.cancel()
         }
-
-        builder.show()
     }
 
-    private fun saveAndSendReport(bitmap: Bitmap, description: String) {
+    private fun saveAndSendReport(bitmap: Bitmap, description: String, name: String, email: String) {
         try {
             val file = File(cacheDir, "bug_report_${System.currentTimeMillis()}.png")
             val outputStream = FileOutputStream(file)
@@ -138,7 +178,7 @@ class ReportActivity : AppCompatActivity() {
             NetworkManager.uploadImage(file) { imageUrl ->
                 if (imageUrl != null) {
                     Log.d("ShakeLog", "Image uploaded: $imageUrl")
-                    sendJsonReport(imageUrl, description)
+                    sendJsonReport(imageUrl, description, name, email)
                 } else {
                     Toast.makeText(this, "Upload image failed", Toast.LENGTH_LONG).show()
                 }
@@ -150,8 +190,8 @@ class ReportActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendJsonReport(imageUrl: String, description: String) {
-        val request = createRequest(imageUrl, description)
+    private fun sendJsonReport(imageUrl: String, description: String, name: String, email: String) {
+        val request = createRequest(imageUrl, description, name, email)
 
         NetworkManager.sendReport(request) { success ->
             if (success) {
@@ -167,7 +207,7 @@ class ReportActivity : AppCompatActivity() {
         }
     }
 
-    private fun createRequest(imageUrl: String, description: String): ReportRequest {
+    private fun createRequest(imageUrl: String, description: String, name: String, email: String): ReportRequest {
         val deviceMap = DeviceCollector.getDeviceData(this)
 
         val deviceInfo = DeviceInfoData(
@@ -188,10 +228,17 @@ class ReportActivity : AppCompatActivity() {
             )
         }
 
+        // Copy existing user metadata and add reporter name
+        val userMeta = HashMap(ShakeLog.userMetadata)
+        userMeta["reporter_name"] = name
+
         return ReportRequest(
+            apiKey = ShakeLog.apiKey,
             reportId = UUID.randomUUID().toString(),
             timestamp = Instant.now().toString(),
             userDescription = description,
+            userIdentifier = email, // reporter email as identifier
+            userMetadata = userMeta, // additional reporter metadata
             device = deviceInfo,
             screenshotUrl = imageUrl,
             breadcrumbs = logs

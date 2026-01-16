@@ -3,9 +3,12 @@ package com.shakelog.sdk.network.model
 import com.shakelog.sdk.data.BreadcrumbData
 
 data class ReportRequest(
+    val apiKey: String,
     val reportId: String,
     val timestamp: String,
     val userDescription: String,
+    val userIdentifier: String?,
+    val userMetadata: Map<String, String>,
     val device: DeviceInfoData,
     val screenshotUrl: String?,
     val breadcrumbs: List<BreadcrumbData>

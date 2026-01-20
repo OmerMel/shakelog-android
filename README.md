@@ -107,6 +107,12 @@ btnPurchase.setOnClickListener {
 
 ```
 
+## 📸 Screenshots
+![WhatsApp Image 2026-01-20 at 23 16 40 (1)](https://github.com/user-attachments/assets/d935889a-a303-4ca7-81df-8a8fcd41506d)
+
+![WhatsApp Image 2026-01-20 at 23 16 40](https://github.com/user-attachments/assets/bd5075f3-e428-48bd-ab86-03a011732cdd)
+
+
 ## 🏗 Technology
 
 The SDK is built using modern Android technologies:

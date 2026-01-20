@@ -1,9 +1,9 @@
 package com.shakelog.demo
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,80 +14,69 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
-    // כאן אתה מדביק את ה-API Key שקיבלת מהפורטל שלך
-    // אם עדיין אין לך, זה יעבוד אבל השרת יחזיר שגיאה בשמירה
-    private val MY_API_KEY = "sk_REPLACE_WITH_YOUR_KEY"
+    // מפתח ה-API מהפורטל שלך
+    private val MY_API_KEY = "sk_9367cd7c87374044bdf00ba647e1ddc4"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. אתחול ה-SDK בתחילת הריצה
+        // 1. אתחול ה-SDK
         ShakeLog.init(application, MY_API_KEY)
 
-        // איתור רכיבי ה-UI
-        val btnLogin = findViewById<Button>(R.id.btn_login)
-        val etUsername = findViewById<EditText>(R.id.et_username)
-        val btnLoadDeal = findViewById<Button>(R.id.btn_load_deal)
+        // הגדרת משתמש "מזוייף" לדמו
+        ShakeLog.setUserIdentifier("student_demo@college.edu")
+        ShakeLog.setMetadata("plan", "Premium")
+
+        val btnPlay = findViewById<Button>(R.id.btn_play_hit)
+        val tvTitle = findViewById<TextView>(R.id.tv_song_title)
+        val tvArtist = findViewById<TextView>(R.id.tv_artist)
         val tvStatus = findViewById<TextView>(R.id.tv_status)
 
-        // 2. לוגיקה לכפתור התחברות (מדמה התחברות משתמש)
-        btnLogin.setOnClickListener {
-            val username = etUsername.text.toString()
-            if (username.isNotEmpty()) {
-                // אומרים ל-SDK מי המשתמש הנוכחי
-                ShakeLog.setUserIdentifier(username)
+        btnPlay.setOnClickListener {
+            // עדכון ה-UI למצב "טוען"
+            tvTitle.text = "Loading..."
+            tvArtist.text = "Fetching data..."
+            btnPlay.isEnabled = false // מונעים לחיצה כפולה
 
-                // מוסיפים מידע נוסף שיופיע בדיווח
-                ShakeLog.setMetadata("user_rank", "Premium")
-                ShakeLog.setMetadata("last_purchase_id", "ORDER-9988")
+            // לוג של ה-SDK
+            ShakeLog.log("User clicked Play on Top Hit")
 
-                Toast.makeText(this, "התחברת כמשתמש: $username", Toast.LENGTH_SHORT).show()
-
-                // רישום פעולה ידנית ללוג של ה-SDK
-                ShakeLog.log("User performed manual login")
-            } else {
-                Toast.makeText(this, "נא להזין שם משתמש", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // 3. הכפתור עם הבאג המכוון
-        btnLoadDeal.setOnClickListener {
-            tvStatus.text = "טוען מבצע מיוחד..."
-
-            // יצירת HTTP Client שכולל את ה-Interceptor של ה-SDK
-            // זה מה שמאפשר ל-SDK לתפוס את השגיאה ברשת אוטומטית
+            // 2. יצירת בקשת רשת עם הבאג
             val client = OkHttpClient.Builder()
-                .addInterceptor(ShakeLogNetworkInterceptor())
+                .addInterceptor(ShakeLogNetworkInterceptor()) // החיבור ל-SDK
                 .build()
 
-            // כתובת שמחזירה שגיאת 404 בכוונה
+            // כתובת שבורה בכוונה (מחזירה 500)
             val request = Request.Builder()
-                .url("https://httpstat.us/404")
+                .url("https://httpstat.us/500?sleep=2000") // השהייה של 2 שניות
                 .build()
 
-            // שליחת הבקשה
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
+                    // שגיאת רשת אמיתית (אין אינטרנט וכו')
                     runOnUiThread {
-                        tvStatus.text = "שגיאת חיבור: ${e.message}"
+                        tvStatus.text = "Connection Error"
+                        btnPlay.isEnabled = true
                     }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    // --- כאן נמצא הבאג המדומה ---
-                    // אנחנו בודקים אם הבקשה נכשלה, אבל לא מעדכנים את המסך!
-                    // המשתמש יראה "טוען..." לנצח ויחשוב שהאפליקציה נתקעה.
+                    // --- הבאג ---
+                    // השרת מחזיר 500, אבל אנחנו לא מטפלים בזה ב-UI!
+                    // המשתמש נשאר תקוע על "Loading..."
+                    // אבל ה-SDK יקליט את השגיאה האדומה ברקע.
 
-                    if (!response.isSuccessful) {
-                        Log.e("DemoApp", "Server returned error: ${response.code}")
-
-                        // ה-SDK יקליט את זה אוטומטית דרך ה-Interceptor,
-                        // אבל אנחנו יכולים להוסיף גם לוג ידני אם נרצה:
-                        ShakeLog.log("Critical error in daily deal loading: 404")
+                    if (response.isSuccessful) {
+                        runOnUiThread {
+                            tvTitle.text = "Shape of You"
+                            tvArtist.text = "Ed Sheeran"
+                            btnPlay.isEnabled = true
+                        }
                     } else {
-                        // אם זה היה מצליח (לא יקרה בדמו הזה)
-                        runOnUiThread { tvStatus.text = "המבצע נטען!" }
+                        // אנחנו מדפיסים לוג אבל לא מעדכנים את המסך למשתמש!
+                        // זה הבאג שהם יצטרכו לדווח עליו.
+                        ShakeLog.log("Server Error: ${response.code}")
                     }
                 }
             })

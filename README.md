@@ -42,12 +42,10 @@ Add the SDK to your module's `build.gradle.kts` dependencies block:
 
 ```
 dependencies {
-    implementation("com.github.YOUR_USERNAME:shakelog-android:1.0.0")
+    implementation("com.github.OmerMel:shakelog-android:1.0.0")
 }
 
 ```
-
-_(Replace `YOUR_USERNAME` with your actual GitHub username)_
 
 ## 🚀 Usage
 

@@ -125,7 +125,9 @@ The SDK is built using modern Android technologies:
 -   **Firebase Storage** - For efficient image and log file hosting.
     
 -   **SensorManager** - For optimized shake detection with debounce logic.
-    
+
+📚 Documentation
+Detailed documentation is available on our [Project Website](https://omermel.github.io/shakelog-android/).
 
 ## 📄 License
 

@@ -126,7 +126,7 @@ The SDK is built using modern Android technologies:
     
 -   **SensorManager** - For optimized shake detection with debounce logic.
 
-📚 Documentation
+## 📚 Documentation
 Detailed documentation is available on our [Project Website](https://omermel.github.io/shakelog-android/).
 
 ## 📄 License

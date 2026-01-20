@@ -1,0 +1,39 @@
+site_name: ShakeLog Documentation
+site_url: https://OmerMel.github.io/shakelog-docs/
+site_author: Omer Meler
+repo_url: https://github.com/OmerMel/shakelog-android
+repo_name: ShakeLog
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Android SDK: android-sdk.md
+  - Backend Server: backend-server.md
+  - Web Portal: web-portal.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true

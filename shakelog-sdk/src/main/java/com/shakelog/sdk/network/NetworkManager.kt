@@ -43,10 +43,10 @@ object NetworkManager {
             .create(ShakeLogApi::class.java)
     }
 
-    fun uploadImage(file: File, callback: (String?) -> Unit) {
+    fun uploadFile(file: File, folderName: String, callback: (String?) -> Unit) {
         val storageRef = FirebaseStorage.getInstance().reference
 
-        val imageRef = storageRef.child("screenshots/${file.name}")
+        val imageRef = storageRef.child("$folderName/${file.name}")
         val fileUri = Uri.fromFile(file)
 
         Log.d(TAG, "Starting upload to Firebase: ${file.name}")

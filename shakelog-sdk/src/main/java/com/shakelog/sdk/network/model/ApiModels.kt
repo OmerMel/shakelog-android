@@ -11,6 +11,7 @@ data class ReportRequest(
     val userMetadata: Map<String, String>,
     val device: DeviceInfoData,
     val screenshotUrl: String?,
+    val logsUrl: String?,
     val breadcrumbs: List<BreadcrumbData>
 )
 

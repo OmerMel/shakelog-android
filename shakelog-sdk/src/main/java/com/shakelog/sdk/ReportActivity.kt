@@ -24,6 +24,7 @@ import com.shakelog.sdk.network.NetworkManager
 import com.shakelog.sdk.network.model.DeviceInfoData
 import com.shakelog.sdk.network.model.ReportRequest
 import com.shakelog.sdk.utils.DeviceCollector
+import com.shakelog.sdk.utils.LogcatHelper
 import java.time.Instant
 import java.util.UUID
 
@@ -169,20 +170,16 @@ class ReportActivity : AppCompatActivity() {
 
     private fun saveAndSendReport(bitmap: Bitmap, description: String, name: String, email: String) {
         try {
-            val file = File(cacheDir, "bug_report_${System.currentTimeMillis()}.png")
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
+            val imageFile = File(cacheDir, "screenshot_${System.currentTimeMillis()}.png")
+            val imgStream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, imgStream)
+            imgStream.flush()
+            imgStream.close()
 
-            NetworkManager.uploadImage(file) { imageUrl ->
-                if (imageUrl != null) {
-                    Log.d("ShakeLog", "Image uploaded: $imageUrl")
-                    sendJsonReport(imageUrl, description, name, email)
-                } else {
-                    Toast.makeText(this, "Upload image failed", Toast.LENGTH_LONG).show()
-                }
-            }
+            val logsFile = File(cacheDir, "logs_${System.currentTimeMillis()}.txt")
+            val logsSuccess = LogcatHelper.saveLogcatToFile(logsFile)
+
+            uploadFilesAndSend(imageFile, if (logsSuccess) logsFile else null, description, name, email)
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -190,24 +187,43 @@ class ReportActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendJsonReport(imageUrl: String, description: String, name: String, email: String) {
-        val request = createRequest(imageUrl, description, name, email)
+    private fun uploadFilesAndSend(imageFile: File, logsFile: File?, description: String, name: String, email: String) {
+        NetworkManager.uploadFile(imageFile, "screenshots") { imageUrl ->
+            if (imageUrl != null) {
+                Log.d("ShakeLog", "Screenshot uploaded: $imageUrl")
 
-        NetworkManager.sendReport(request) { success ->
-            if (success) {
-                runOnUiThread {
-                    Toast.makeText(this, "Report sent successfully ", Toast.LENGTH_LONG).show()
-                    finish()
+                if (logsFile != null) {
+                    NetworkManager.uploadFile(logsFile, "logs") { logsUrl ->
+                        Log.d("ShakeLog", "Logs uploaded: $logsUrl")
+                        sendFinalJson(imageUrl, logsUrl, description, name, email)
+                    }
+                } else {
+                    sendFinalJson(imageUrl, null, description, name, email)
                 }
             } else {
                 runOnUiThread {
-                    Toast.makeText(this, "Unable to send the report", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Upload screenshot failed", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    private fun createRequest(imageUrl: String, description: String, name: String, email: String): ReportRequest {
+    private fun sendFinalJson(imageUrl: String, logsUrl: String?, description: String, name: String, email: String) {
+        val request = createRequest(imageUrl, logsUrl, description, name, email)
+
+        NetworkManager.sendReport(request) { success ->
+            runOnUiThread {
+                if (success) {
+                    Toast.makeText(this, "Report sent successfully", Toast.LENGTH_LONG).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, "Failed to sent report to the server", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun createRequest(imageUrl: String, logsUrl: String?, description: String, name: String, email: String): ReportRequest {
         val deviceMap = DeviceCollector.getDeviceData(this)
 
         val deviceInfo = DeviceInfoData(
@@ -241,6 +257,7 @@ class ReportActivity : AppCompatActivity() {
             userMetadata = userMeta, // additional reporter metadata
             device = deviceInfo,
             screenshotUrl = imageUrl,
+            logsUrl = logsUrl,
             breadcrumbs = logs
         )
     }

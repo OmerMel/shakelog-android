@@ -109,10 +109,10 @@ btnPurchase.setOnClickListener {
 
 ## 📸 Screenshots
 <img src="https://github.com/user-attachments/assets/d935889a-a303-4ca7-81df-8a8fcd41506d" alt="WhatsApp Image 1" width="400"/>
-Built-in annotation tool allows users to highlight and draw on the screenshot to pinpoint the issue.
+<br>Built-in annotation tool allows users to highlight and draw on the screenshot to pinpoint the issue.
 
 <br> <img src="https://github.com/user-attachments/assets/bd5075f3-e428-48bd-ab86-03a011732cdd" alt="WhatsApp Image 2" width="400"/>
-A user-friendly form collects bug descriptions and user contact details before submission.
+<br>A user-friendly form collects bug descriptions and user contact details before submission.
 
 ## 🏗 Technology
 

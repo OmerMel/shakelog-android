@@ -41,14 +41,14 @@ dependencies {
     implementation(libs.material)
 
     // 1. Networking (Retrofit + OkHttp)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    api("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+    api(libs.okhttp)
 
     // 2. Firebase (Storage only)
-    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
-    implementation("com.google.firebase:firebase-storage")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.storage)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -3,7 +3,7 @@
 
 **ShakeLog** is a powerful bug reporting SDK for Android applications. It allows users and QA testers to report bugs instantly by simply **shaking the device**. The SDK captures the screen, collects device logs, tracks user steps (breadcrumbs), and uploads everything to the ShakeLog Dashboard.
 
-## ✨ Features
+## Features
 
 -   **Shake to Report:** Automatically detects aggressive shaking to trigger the reporting flow.
     

@@ -15,7 +15,7 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     // מפתח ה-API מהפורטל שלך
-    private val MY_API_KEY = "sk_9367cd7c87374044bdf00ba647e1ddc4"
+    private val MY_API_KEY = "sk_01bebaa9398244d2850dd0d24616f2d4"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

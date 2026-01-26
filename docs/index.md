@@ -9,7 +9,7 @@ ShakeLog consists of three main components:
 
 1.  [**Android Library**](https://github.com/OmerMel/shakelog-android/blob/master/docs/android-library.md)**:** Used by mobile developers to integrate "Shake-to-Report" functionality.
 
-2.  ⚙[**Backend Server**](https://github.com/OmerMel/shakelog-android/blob/master/docs/backend-server.md)**:** The central brain handling authentication, data ingestion, and persistence.
+2.  [**Backend Server**](https://github.com/OmerMel/shakelog-android/blob/master/docs/backend-server.md)**:** The central brain handling authentication, data ingestion, and persistence.
 
 3.  [**Web Dashboard**](https://github.com/OmerMel/shakelog-android/blob/master/docs/web-portal.md)**:** A visual interface for teams to view, filter, and resolve bugs.
 

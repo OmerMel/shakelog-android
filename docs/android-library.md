@@ -9,7 +9,7 @@
     
 -   **Smart Screenshot:** Captures the current screen state instantly.
     
--   **✏Built-in Editor:** Allows users to draw, annotate, and highlight issues directly on the screenshot.
+-   **Built-in Editor:** Allows users to draw, annotate, and highlight issues directly on the screenshot.
     
 -   **Breadcrumbs & Logs:** Automatically tracks user journey (screen transitions) and system events leading up to the crash.
     

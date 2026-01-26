@@ -5,20 +5,20 @@
 
 ## ✨ Features
 
--   **👋 Shake to Report:** Automatically detects aggressive shaking to trigger the reporting flow.
+-   **Shake to Report:** Automatically detects aggressive shaking to trigger the reporting flow.
     
--   **📸 Smart Screenshot:** Captures the current screen state instantly.
+-   **Smart Screenshot:** Captures the current screen state instantly.
     
--   **✏️ Built-in Editor:** Allows users to draw, annotate, and highlight issues directly on the screenshot.
+-   **✏Built-in Editor:** Allows users to draw, annotate, and highlight issues directly on the screenshot.
     
--   **👣 Breadcrumbs & Logs:** Automatically tracks user journey (screen transitions) and system events leading up to the crash.
+-   **Breadcrumbs & Logs:** Automatically tracks user journey (screen transitions) and system events leading up to the crash.
     
--   **🌐 Network Logging:** Intercepts and records HTTP requests/responses (using OkHttp) to debug API errors.
+-   **Network Logging:** Intercepts and records HTTP requests/responses (using OkHttp) to debug API errors.
     
--   **📱 Device Metadata:** Automatically collects OS version, battery level, device model, and screen resolution.
+-   **Device Metadata:** Automatically collects OS version, battery level, device model, and screen resolution.
     
 
-## 📦 Installation
+## Installation
 
 ### Step 1. Add the JitPack repository
 
@@ -47,7 +47,7 @@ dependencies {
 
 ```
 
-## 🚀 Usage
+## Usage
 
 ### 1. Initialization
 
@@ -107,14 +107,14 @@ btnPurchase.setOnClickListener {
 
 ```
 
-## 📸 Screenshots
+## Screenshots
 <img src="https://github.com/user-attachments/assets/d935889a-a303-4ca7-81df-8a8fcd41506d" alt="WhatsApp Image 1" width="400"/>
 <br>Built-in annotation tool allows users to highlight and draw on the screenshot to pinpoint the issue.
 
 <br> <img src="https://github.com/user-attachments/assets/bd5075f3-e428-48bd-ab86-03a011732cdd" alt="WhatsApp Image 2" width="400"/>
 <br>A user-friendly form collects bug descriptions and user contact details before submission.
 
-## 🏗 Technology
+## Technology
 
 The SDK is built using modern Android technologies:
 
@@ -127,6 +127,6 @@ The SDK is built using modern Android technologies:
 -   **SensorManager** - For optimized shake detection with debounce logic.
     
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/OmerMel/shakelog-android/blob/master/LICENSE) file for details.

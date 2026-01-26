@@ -3,7 +3,7 @@
 
 The **ShakeLog Backend** is a RESTful API built with **Spring Boot** and **Kotlin**. It serves as the central hub for the ShakeLog ecosystem, handling data ingestion from the Android SDK, managing project authentication, and serving data to the Web Portal.
 
-## 🏗 Architecture
+## Architecture
 
 The server follows a classic layered architecture to ensure separation of concerns and scalability:
 
@@ -16,20 +16,20 @@ The server follows a classic layered architecture to ensure separation of concer
 -   **Database:** MongoDB Atlas (Cloud) for storing unstructured JSON reports.
     
 
-## ✨ Key Features
+## Key Features
 
--   **🚀 Report Ingestion:** Receives complex bug reports including screenshots, logs, device metadata, and breadcrumbs.
+-   **Report Ingestion:** Receives complex bug reports including screenshots, logs, device metadata, and breadcrumbs.
     
--   **🔐 Project Authentication:** Implements a custom "Project-based" auth system (Project ID + Access Code) for teams.
+-   **Project Authentication:** Implements a custom "Project-based" auth system (Project ID + Access Code) for teams.
     
--   **🔑 Multi-Tenancy:** Uses unique **API Keys** to securely segregate data between different applications.
+-   **Multi-Tenancy:** Uses unique **API Keys** to securely segregate data between different applications.
     
--   **📊 Status Management:** Allows the Web Portal to update bug status (Open, In Progress, Resolved, Closed).
+-   **Status Management:** Allows the Web Portal to update bug status (Open, In Progress, Resolved, Closed).
     
--   **☁️ Cloud Native:** Designed to run on cloud platforms like **Render** .
+-   **☁Cloud Native:** Designed to run on cloud platforms like **Render** .
     
 
-## 🛠 Tech Stack
+## Tech Stack
 
 -   **Language:** Kotlin (JDK 17+)
     
@@ -42,7 +42,7 @@ The server follows a classic layered architecture to ensure separation of concer
 -   **API Documentation:** Swagger / OpenAPI (Optional integration)
     
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -94,9 +94,9 @@ Run the application using the Gradle wrapper:
 
 The server will start at `http://localhost:8080`.
 
-## 🔌 API Endpoints
+## API Endpoints
 
-### 🟢 Authentication & Projects
+### Authentication & Projects
 
 
 | Method | Endpoint | Description | Payload |
@@ -105,13 +105,13 @@ The server will start at `http://localhost:8080`.
 | `POST` | `/api/auth/login-project` | Login to the web portal | `{ "projectId": "...", "accessCode": "..." }` |
 
 
-### 🟡 Reports (SDK)
+### Reports (SDK)
 
 | Method | Endpoint | Description | Payload |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/reports` | Submit a new bug report | `{ "apiKey": "...", "reportId": "...", "device": {...}, ... }` |
 
-### 🔵 Portal Operations
+### Portal Operations
 
 | Method | Endpoint | Description | Payload / Params |
 | :--- | :--- | :--- | :--- |
@@ -119,7 +119,7 @@ The server will start at `http://localhost:8080`.
 | `PUT` | `/api/reports/status` | Update report status | `{ "reportId": "...", "status": "CLOSED", "apiKey": "..." }` |
 
 
-## 📦 Data Models
+## Data Models
 
 ### Project Entity
 
@@ -151,6 +151,6 @@ The server will start at `http://localhost:8080`.
 
 ```
 
-## 📄 License
+## License
 
 This project is licensed under the MIT - see the [LICENSE](https://github.com/OmerMel/shakelog-server/blob/master/LICENSE) file for details.

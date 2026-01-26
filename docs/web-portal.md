@@ -1,9 +1,9 @@
 
-# 💻 ShakeLog - Web Dashboard
+# ShakeLog - Web Dashboard
 
 **ShakeLog Web Dashboard** is the administrative frontend for the ShakeLog bug reporting ecosystem. Built with **React** and **Vite**, it provides a responsive interface for development teams to monitor, filter, and manage bug reports submitted from mobile devices.
 
-## 🌟 Key Features
+## Key Features
 
 -   **Secure Access:** Project-based login system using Project ID and Access Codes.
     
@@ -18,7 +18,7 @@
 -   **Theme Support:** Fully responsive design with built-in Dark/Light mode.
     
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 -   **Framework:** React 18
     
@@ -31,7 +31,7 @@
 -   **State Management:** React Context API + Hooks
     
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these instructions to set up the dashboard locally.
 
@@ -71,7 +71,7 @@ Follow these instructions to set up the dashboard locally.
     Navigate to `http://localhost:5173` to view the dashboard.
     
 
-## 📂 Code Structure & Components
+## Code Structure & Components
 
 The project is structured to separate view logic, state management, and API services. Below is an overview of the key components in the codebase:
 
@@ -121,7 +121,7 @@ The project is structured to separate view logic, state management, and API serv
 -   **`formatters.js`**: Contains pure functions for data presentation, such as formatting timestamps, mapping Status Enums to UI colors, and determining battery icons.
     
 
-## 📸 Screenshots
+## Screenshots
 
 ### 1. The Dashboard
 
@@ -136,6 +136,6 @@ The project is structured to separate view logic, state management, and API serv
 <img width="600" alt="portal-login" src="https://github.com/user-attachments/assets/17b05458-1857-45a9-9712-392c891e9155" />
 
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](https://github.com/OmerMel/shakelog-dashboard/blob/master/LICENSE) file for details.

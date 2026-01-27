@@ -1,24 +1,24 @@
 
-# ShakeLog Android SDK 📱
+# ShakeLog Android SDK
 
 **ShakeLog** is a powerful bug reporting SDK for Android applications. It allows users and QA testers to report bugs instantly by simply **shaking the device**. The SDK captures the screen, collects device logs, tracks user steps (breadcrumbs), and uploads everything to the ShakeLog Dashboard.
 
-## ✨ Features
+## Features
 
--   **👋 Shake to Report:** Automatically detects aggressive shaking to trigger the reporting flow.
+-   **Shake to Report:** Automatically detects aggressive shaking to trigger the reporting flow.
     
--   **📸 Smart Screenshot:** Captures the current screen state instantly.
+-   **Smart Screenshot:** Captures the current screen state instantly.
     
--   **✏️ Built-in Editor:** Allows users to draw, annotate, and highlight issues directly on the screenshot.
+-   **Built-in Editor:** Allows users to draw, annotate, and highlight issues directly on the screenshot.
     
--   **👣 Breadcrumbs & Logs:** Automatically tracks user journey (screen transitions) and system events leading up to the crash.
+-   **Breadcrumbs & Logs:** Automatically tracks user journey (screen transitions) and system events leading up to the crash.
     
--   **🌐 Network Logging:** Intercepts and records HTTP requests/responses (using OkHttp) to debug API errors.
+-   **Network Logging:** Intercepts and records HTTP requests/responses (using OkHttp) to debug API errors.
     
--   **📱 Device Metadata:** Automatically collects OS version, battery level, device model, and screen resolution.
+-   **Device Metadata:** Automatically collects OS version, battery level, device model, and screen resolution.
     
 
-## 📦 Installation
+## Installation
 
 ### Step 1. Add the JitPack repository
 
@@ -47,7 +47,7 @@ dependencies {
 
 ```
 
-## 🚀 Usage
+## Usage
 
 ### 1. Initialization
 
@@ -107,7 +107,7 @@ btnPurchase.setOnClickListener {
 
 ```
 
-## 📸 Screenshots
+## Screenshots
 <img src="https://github.com/user-attachments/assets/d935889a-a303-4ca7-81df-8a8fcd41506d" alt="WhatsApp Image 1" width="400"/>
 <br>Built-in annotation tool allows users to highlight and draw on the screenshot to pinpoint the issue.
 
@@ -126,9 +126,9 @@ The SDK is built using modern Android technologies:
     
 -   **SensorManager** - For optimized shake detection with debounce logic.
 
-## 📚 Documentation
+## Documentation
 Detailed documentation is available on our [Project Website](https://omermel.github.io/shakelog-android/).
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/OmerMel/shakelog-android/blob/master/LICENSE) file for details.

@@ -27,7 +27,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Android SDK: android-library.md
+  - Android Library: android-library.md
   - Backend Server: backend-server.md
   - Web Portal: web-portal.md
 

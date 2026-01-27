@@ -1,5 +1,5 @@
 
-# ShakeLog Backend Server ⚙️
+# ShakeLog Backend Server
 
 The **ShakeLog Backend** is a RESTful API built with **Spring Boot** and **Kotlin**. It serves as the central hub for the ShakeLog ecosystem, handling data ingestion from the Android SDK, managing project authentication, and serving data to the Web Portal.
 

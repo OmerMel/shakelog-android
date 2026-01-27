@@ -114,7 +114,7 @@ btnPurchase.setOnClickListener {
 <br> <img src="https://github.com/user-attachments/assets/bd5075f3-e428-48bd-ab86-03a011732cdd" alt="WhatsApp Image 2" width="400"/>
 <br>A user-friendly form collects bug descriptions and user contact details before submission.
 
-## 🏗 Technology
+## Technology
 
 The SDK is built using modern Android technologies:
 
